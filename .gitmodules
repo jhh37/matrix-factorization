@@ -3,4 +3,4 @@
 	url = https://git01.codeplex.com/awful
 [submodule "Code/External/manopt"]
 	path = Code/External/manopt
-	url = https://github.com/jhh37/manopt
+	url = https://github.com/jhh37/manopt-unofficial
