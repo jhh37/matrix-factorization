@@ -1,0 +1,6 @@
+[submodule "Code/External/awful"]
+	path = Code/External/awful
+	url = https://git01.codeplex.com/awful
+[submodule "Code/External/manopt"]
+	path = Code/External/manopt
+	url = https://github.com/jhh37/manopt
