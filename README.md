@@ -12,4 +12,4 @@ Our 1-min video spotlight can be found at https://youtu.be/Kk0NIeNnc5M.
 
 # Acknowledgment
 - The work was supported by Microsoft and Toshiba Research Europe. We thank Roberto Cipolla, Christopher Zach, Bamdev Mishra and the anonymous reviewers for their invaluable comments.
-- The travel has been funded by British Machine Vision Association (BMVA) and the Rex Moir Fund from Department of Engineering, University of Cambridge.
+- The travel has been funded by the British Machine Vision Association (BMVA) and the Rex Moir Fund from Department of Engineering, University of Cambridge.
