@@ -7,3 +7,7 @@
 [submodule "Code/External/manopt"]
 	path = Code/External/manopt
 	url = https://github.com/jhh37/manopt-unofficial
+
+[submodule "Code/External/Datasets"]
+	path = Code/External/Datasets
+	url = https://github.com/jhh37/mf-datasets
