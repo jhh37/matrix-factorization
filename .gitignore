@@ -13,9 +13,6 @@ Thumbs.db
 
 # Submodule folder
 Code/External
-Code/External/awful
-Code/External/ceres_lrmc
-Code/External/manopt
 
 # Results folder
 Code/Results
