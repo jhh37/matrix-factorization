@@ -1,0 +1,9 @@
+[submodule "Code/External/awful"]
+	path = Code/External/awful
+	url = https://git01.codeplex.com/awful
+[submodule "Code/External/ceres_lrmc"]
+	path = Code/External/ceres_lrmc
+	url = https://github.com/jhh37/ceres-lrmc
+[submodule "Code/External/manopt"]
+	path = Code/External/manopt
+	url = https://github.com/jhh37/manopt-unofficial
