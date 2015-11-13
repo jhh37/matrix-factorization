@@ -2,7 +2,7 @@
 	path = Code/Toolboxes/awful
 	url = https://git01.codeplex.com/awful
 [submodule "Code/External/ceres_lrmc"]
-	path = Code/Algorithms/JE/je_ceres_lrmc
+	path = Code/Algorithms/JE/ceres_lrmc/je_ceres_lrmc
 	url = https://github.com/jhh37/ceres-lrmc
 [submodule "Code/External/manopt"]
 	path = Code/Toolboxes/manopt
