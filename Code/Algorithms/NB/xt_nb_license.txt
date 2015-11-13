@@ -1,4 +1,4 @@
-Copyright (c) 2014, Nicolas Boumal
+Copyright (c) 2015, Nicolas Boumal
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -38,5 +38,5 @@ Belgium
 
 nicolasboumal@gmail.com
 
-http://perso.uclouvain.be/nicolas.boumal/
+http://www.nicolasboumal.net
 http://sites.uclouvain.be/absil/RTRMC/

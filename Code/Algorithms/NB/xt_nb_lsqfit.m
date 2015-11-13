@@ -101,7 +101,7 @@ function [W, out2, out3] = xt_nb_lsqfit(problem, U, in3, in4)
         Q1 = xt_nb_multfullsparse(H.', RU, mask);
         Q2 = xt_nb_multfullsparse(U.', Chat.*HW, mask);
 		
-        dW = - xt_nb_blocksolve(Achol, Q1 + Q2);
+        dW = -xt_nb_blocksolve(Achol, Q1 + Q2);
         
         out2 = dW;
         out3 = compumem;

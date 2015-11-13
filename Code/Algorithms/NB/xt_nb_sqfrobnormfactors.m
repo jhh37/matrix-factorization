@@ -1,4 +1,4 @@
-function val = sqfrobnormfactors(A, B, X, Y)
+function val = xt_nb_sqfrobnormfactors(A, B, X, Y)
 % FUNCTION VAL = SQFROBNORMFACTORS(A, B, X, Y)
 %
 % Inputs:

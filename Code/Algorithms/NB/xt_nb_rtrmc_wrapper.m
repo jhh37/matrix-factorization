@@ -22,16 +22,16 @@ opts = au_opts( ...
 % close all;
 % clc;
 
-if exist('manopt_version', 'file') ~= 2
-  cd '../../';
-  
-  importmanopt;
-  cd ..;
-  warning('manopt:version', ['Using Manopt 1.0.7. This is probably not ' ...
-    'the most up-to-date version of Manopt. Please consider going to ' ...
-    'http://www.manopt.org to obtain the latest version.\n\n' ...
-    'Manopt 1.0.7 was added to your Matlab path.\n\n']);
-end
+% if exist('manopt_version', 'file') ~= 2
+%   cd '../../';
+%   
+%   importmanopt;
+%   cd ..;
+%   warning('manopt:version', ['Using Manopt 1.0.7. This is probably not ' ...
+%     'the most up-to-date version of Manopt. Please consider going to ' ...
+%     'http://www.manopt.org to obtain the latest version.\n\n' ...
+%     'Manopt 1.0.7 was added to your Matlab path.\n\n']);
+% end
 
 % If this script fails, try executing installrtrmc.m, to compile the mex
 % files. This will not be necessary if launching the present script works
