@@ -14,3 +14,6 @@ Thumbs.db
 # Results folder
 Code/Results
 Code/Temp
+
+# Ceres executable
+Code/Algorithms/JE/je_ceres_lrmc
