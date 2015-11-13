@@ -11,9 +11,6 @@ Thumbs.db
 *.mexw32
 *.mexw64
 
-# Submodule folder
-Code/External
-
 # Results folder
 Code/Results
 Code/Temp
