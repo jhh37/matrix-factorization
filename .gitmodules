@@ -1,12 +1,12 @@
 [submodule "Code/External/awful"]
-	path = Code/External/awful
+	path = Code/Toolboxes/awful
 	url = https://git01.codeplex.com/awful
 [submodule "Code/External/ceres_lrmc"]
-	path = Code/External/ceres_lrmc
+	path = Code/Algorithms/JE/je_ceres_lrmc
 	url = https://github.com/jhh37/ceres-lrmc
 [submodule "Code/External/manopt"]
-	path = Code/External/manopt
+	path = Code/Toolboxes/manopt
 	url = https://github.com/jhh37/manopt-unofficial
 [submodule "Code/External/Datasets"]
-	path = Code/External/Datasets
+	path = Code/Datasets
 	url = https://github.com/jhh37/mf-datasets
