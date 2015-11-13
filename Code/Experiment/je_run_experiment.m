@@ -50,6 +50,9 @@ end
 
 % Write the measurement matrix and the weight matrix in binary.
 sample_id = lower(dataset);
+% If the Temp folder does not exist, create it.
+if exist('Temp', 'dir') ~= 7, mkdir('Temp');
+end
 filename = ['Temp/', sample_id, '_r', num2str(r)];
 
 if ~issparse(data.M)

@@ -4,15 +4,17 @@ function je_analyze_results(dataset, r, varargin)
 % These flags say which methods to run
 %% OPTIONS
 opts = au_opts(...
-  'sample_start=1;sample_end=0;num_samples=100',...
+  'sample_start=1;sample_end=0;num_samples=100', ...
   'tol=1e-6', ...
   'csv=0', ...
   'display=1', ...
   'output_filename=0', ...
   'folder_suffix=0', ...
+  'display_reconstructions=0', ...
+  'save_reconstructions=0', ...
   varargin{:});
 
-algorithms = {
+alg_names = {
   % Latest custom-coded algorithms
   'ALS', 'New'         % Alternation (Undamped RW3)
   'DW', 'New'          % Damped Wiberg (Damped RW2 + projection constraint)
@@ -70,14 +72,14 @@ else
   error('The specified results file does not exist.');
 end
 
-globalMin = nan;
-N = size(algorithms, 1);
+best_min = nan;
+N = size(alg_names, 1);
 
 % Create a list of used algorithms and search for the best optimum.
 j = 1;
 alg_list.idx = zeros(N, 1);
 for i=1:N
-  alg_name = algorithms{i,1};
+  alg_name = alg_names{i,1};
   if isfield(opts, (alg_name))
     if opts.(alg_name)
       alg_list.idx(j) = i;
@@ -93,7 +95,7 @@ for i=1:N
       else
         alg = [lrmc_results.(dataset)(opts.sample_start:opts.sample_end).(alg_name)];
       end
-      if (isnan(globalMin)) || (globalMin > min([alg.cost])), globalMin = min([alg.cost]);
+      if (isnan(best_min)) || (best_min > min([alg.cost])), best_min = min([alg.cost]);
       end
     end
   end
@@ -119,13 +121,23 @@ alg_list.runtime.fail.mean = nan(N,1);
 alg_list.runtime.fail.median = nan(N,1);
 alg_list.ips.all.mean = nan(N,1);
 alg_list.ips.all.median = nan(N,1);
+alg_list.RUSSO.conv = nan(N,1);
+alg_list.RUSSO.all = nan(N,1);
+alg_list.RUSSO.optima = cell(N, 1);
+alg_list.RUSSO.runtime = cell(N,1);
+alg_list.triple_RUSSO.conv = nan(N, 1);
+alg_list.triple_RUSSO.all = nan(N, 1);
+alg_list.triple_RUSSO.optima = cell(N, 1);
+alg_list.triple_RUSSO.runtime = cell(N,1);
 alg_list.TSS.mean = nan(N,1);
 alg_list.TSS.std = nan(N,1);
 alg_list.TSS.mean_est = nan(N,1);
 alg_list.TSS.std_est = nan(N,1);
+alg_list.TRUSSO.mean = nan(N, 1);
+alg_list.TRUSSO.std = nan(N, 1);
 
 for i=1:N
-  alg_name = algorithms{alg_list.idx(i),1};
+  alg_name = alg_names{alg_list.idx(i),1};
   
   % If the specified algorithm exists, do the calculations. Otherwise,
   % continue with the rest of the for loop.
@@ -135,7 +147,7 @@ for i=1:N
     else
       alg = [lrmc_results.(dataset)(opts.sample_start:opts.sample_end).(alg_name)];
     end
-    alg_conv = [alg.cost] - globalMin < opts.tol  *globalMin;
+    alg_conv = [alg.cost] - best_min < opts.tol  *best_min;
     alg_all_iters = [alg.iters];
     alg_success_iters = alg_all_iters(alg_conv);    alg_fail_iters = alg_all_iters(~alg_conv);
     alg_all_runtime = [alg.runtime];
@@ -168,8 +180,52 @@ for i=1:N
       alg_list.runtime.success.mean(i) = 0;
     end
     
+    % RUSSO-X
+    alg_list.RUSSO.optima{i} = nan(alg_list.runs.all(i) - 1, 1);
+    alg_list.RUSSO.runtime{i} = nan(alg_list.runs.all(i) - 1, 1);
+    if alg_list.runs.conv(i) >= 2,
+      % Randperm RUSSO
+      if alg_list.runs.all(i) < 10,
+        % If the number of runs < 10, compute randperm runs up to 10.
+        max_runs = min(10, factorial(alg_list.runs.all(i)));
+      else
+        max_runs = 100;
+      end
+      for j = 1 : max_runs
+        % RUSSO optimum
+        [alg_list.RUSSO.optima{i}(j), alg_list.RUSSO.runtime{i}(j)] = je_compute_russo([alg.cost], [alg.runtime], j, sprintf('tol=%e', opts.tol));
+        
+        % Triple-RUSSO optimum
+        num_extra_russos = 2;
+        extra_russo_opts = nan(1, num_extra_russos);
+        extra_russo_times = nan(1, num_extra_russos);
+        for k = 1 : num_extra_russos
+          [extra_russo_opts(k), extra_russo_times(k)] = je_compute_russo([alg.cost], [alg.runtime], j + k * max_runs, sprintf('tol=%e', opts.tol));
+        end
+        alg_list.triple_RUSSO.optima{i}(j) = min([alg_list.RUSSO.optima{i}(j), extra_russo_opts]);
+        alg_list.triple_RUSSO.runtime{i}(j) = sum([alg_list.RUSSO.runtime{i}(j), extra_russo_times]);
+      end
+      
+      % Mean time for RUSSO
+      alg_list.TRUSSO.mean(i) = mean(alg_list.RUSSO.runtime{i});
+      alg_list.TRUSSO.std(i) = std(alg_list.RUSSO.runtime{i});
+      % No replacement RUSSO
+      %  for j = 1 : alg_list.runs.all(i) - 1
+      %    alg_list.RUSSO.optima{i}(j) = je_compute_russo([alg(j:end).cost]);
+      %  end
+      % Compute how many have converged to the global minimum.
+      alg_list.RUSSO.conv(i) = sum( ...
+        abs(alg_list.RUSSO.optima{i} - best_min) < ...
+        opts.tol * best_min);
+      alg_list.RUSSO.all(i) = sum(~isnan(alg_list.RUSSO.optima{i}));
+      alg_list.triple_RUSSO.conv(i) = sum( ...
+        abs(alg_list.triple_RUSSO.optima{i} - best_min) < ...
+        opts.tol * best_min);
+      alg_list.triple_RUSSO.all(i) = sum(~isnan(alg_list.triple_RUSSO.optima{i}));
+    end
+    
     % TSS
-    succ = find(([alg.cost] - globalMin) < opts.tol * globalMin);
+    succ = find(([alg.cost] - best_min) < opts.tol * best_min);
     if length(succ) < 2,
       alg_list.TSS.mean(i) = sum([alg.runtime]);
     else
@@ -199,8 +255,8 @@ for i=1:N
       alg_list.TSS.std_est(i) = alg_list.runtime.fail.mean(i) * ...
         sqrt(2 * (1 - p)) / p;
     end
-    MTSSest = alg_list.TSS.mean_est(i);
-    STSSest = alg_list.TSS.std_est(i);
+    %     MTSSest = alg_list.TSS.mean_est(i);
+    %     STSSest = alg_list.TSS.std_est(i);
   end
 end
 
@@ -208,38 +264,49 @@ end
 % a(1) = alg_list.runtime.t2s.mean(i);
 % a(2) = alg_list.runtime.t2s.std(i);
 
-T = table(...
-  algorithms(alg_list.idx, 1),...
-  algorithms(alg_list.idx, 2),...
-  [ alg_list.runs.conv alg_list.runs.all],...
-  alg_list.runs.conv ./ alg_list.runs.all * 100,...
-  alg_list.runtime.all.median,...
-  alg_list.TSS.mean,...
-  alg_list.TSS.std,...
-  alg_list.iters.success.median,...
-  alg_list.iters.fail.median,...
-  alg_list.iters.all.median,...
-  alg_list.runtime.success.median,...
-  alg_list.runtime.fail.median,...
-  alg_list.ips.all.median,...
-  alg_list.iters.success.mean,...
-  alg_list.iters.fail.mean,...
-  alg_list.iters.all.mean,...
-  alg_list.runtime.success.mean,...
-  alg_list.runtime.fail.mean,...
-  alg_list.runtime.all.mean,...
-  alg_list.ips.all.mean,...
-  'VariableNames',{'ALGORITHM', 'NOTE', 'CONV_RUNS', 'CONV_RATE', 'TIME_MED', 'MTSS', 'SIGMA_MTSS', 'SI_MED', 'FI_MED', 'ITERS_MED', 'ST_MED', 'FT_MED', 'IPS_MED', 'SI_AVR', 'FI_AVR', 'ITERS_AVR', 'ST_AVR', 'FT_AVR', 'TIME_AVR', 'IPS_AVR'});
+if opts.display
+  fprintf(['\n--- [ ', dataset,' - rank ', num2str(r), ' ] --- \n']);
+end
 
-if opts.display, disp(T);
+T = table(...
+  alg_names(alg_list.idx, 1), ...
+  alg_names(alg_list.idx, 2), ...
+  [ alg_list.runs.conv alg_list.runs.all], ...
+  alg_list.runs.conv ./ alg_list.runs.all * 100, ...
+  alg_list.runtime.all.median, ...
+  alg_list.TSS.mean, ...
+  alg_list.TSS.std, ...
+  [ alg_list.RUSSO.conv alg_list.RUSSO.all], ...
+  alg_list.RUSSO.conv ./ alg_list.RUSSO.all * 100, ...
+  alg_list.TRUSSO.mean, ...
+  alg_list.TRUSSO.std, ...
+  [ alg_list.triple_RUSSO.conv alg_list.triple_RUSSO.all], ...
+  alg_list.triple_RUSSO.conv ./ alg_list.triple_RUSSO.all * 100, ...
+  alg_list.iters.success.median, ...
+  alg_list.iters.fail.median, ...
+  alg_list.iters.all.median, ...
+  alg_list.runtime.success.median, ...
+  alg_list.runtime.fail.median, ...
+  alg_list.ips.all.median, ...
+  alg_list.iters.success.mean, ...
+  alg_list.iters.fail.mean, ...
+  alg_list.iters.all.mean, ...
+  alg_list.runtime.success.mean, ...
+  alg_list.runtime.fail.mean, ...
+  alg_list.runtime.all.mean, ...
+  alg_list.ips.all.mean, ...
+  'VariableNames',{'ALGORITHM', 'NOTE', 'CONV_RUNS', 'CONV_RATE', 'TIME_MED', 'M_TSS', 'STD_TSS', 'RUSSO_CONV', 'RUSSO_RATE', 'M_TRUSSO', 'STD_TRUSSO', 'TRIRUSSO_CONV', 'TRIRUSSO_RATE', 'SI_MED', 'FI_MED', 'ITERS_MED', 'ST_MED', 'FT_MED', 'IPS_MED', 'SI_AVR', 'FI_AVR', 'ITERS_AVR', 'ST_AVR', 'FT_AVR', 'TIME_AVR', 'IPS_AVR'});
+
+if opts.display, disp(T(:, [1 2 3 4 5 8 9 10 11 12 13]));
 end
 
 if opts.csv
   writetable(T, [file, '.csv']);
 end
 
-fprintf('\n--- [ Other information ] --- \n');
-fprintf('Global minimum: \t\t%.6f\n', globalMin);
-fprintf('Point of convergence: \t%.6f\n\n', globalMin + opts.tol * globalMin);
+if opts.display
+  fprintf('Best minimum: \t\t%.6f\n', best_min);
+  fprintf('Point of convergence: \t%.6f\n\n', best_min + opts.tol * best_min);
+end
 
 end

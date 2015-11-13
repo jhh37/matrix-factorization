@@ -9,14 +9,14 @@ je_run_experiment('dino_trimmed', 4, 'DRW2P=1', 'sample_end=10');
 % Perform experiment on multiple algorithms with specific settings
 % [ overwrite = 1 will re-run experiment on the specified sample range. ]
 je_run_experiment('dino_trimmed', 4, 'DRW2P=1', 'DRW1P=1', 'ALS=1', ...
-  'TO_DW=1', 'CH_LM_S_RW2=1', 'CO_LM_M_GN=1', ... % 'PG_CSF=1'
+  'TO_DW=1', 'CH_LM_S_RW2=1', 'NB_RTRMC=1', ... % 'PG_CSF=1'
   'sample_start=1', 'sample_end=3', 'max_iter=300', 'overwrite=1');
 
 % Analyze algorithm performance
 % [ csv = 1 will write the csv file to
 % Results/<Dataset_name>/<Dataset_name_along with rank>.csv. ]
 je_analyze_results('dino_trimmed', 4, 'DRW2P=1', 'DRW1P=1', 'ALS=1', ...
-  'TO_DW=1', 'CH_LM_S_RW2=1', 'CO_LM_M_GN=1', ... % 'PG_CSF=1'
+  'TO_DW=1', 'CH_LM_S_RW2=1', 'NB_RTRMC=1', ... % 'PG_CSF=1'
   'csv=1');
 
 %% LIST OF ALGORITHMS
