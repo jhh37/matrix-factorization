@@ -1,6 +1,10 @@
+# Mex files
 *.mexa64
 *.mexglx
 *.mexmaci64
 *.mexw32
 *.mexw64
+
+# Results folder
+Code/Results/*
 
