@@ -3,10 +3,10 @@
 	url = https://git01.codeplex.com/awful
 [submodule "Code/External/ceres_lrmc"]
 	path = Code/Algorithms/JE/ceres_lrmc
-	url = https://github.com/jhh37/ceres-lrmc
+	url = https://github.com/jhh37/lrmf-ceres
 [submodule "Code/External/manopt"]
 	path = Code/Toolboxes/manopt
 	url = https://github.com/jhh37/manopt-unofficial
 [submodule "Code/External/Datasets"]
 	path = Code/Datasets
-	url = https://github.com/jhh37/mf-datasets
+	url = https://github.com/jhh37/lrmf-datasets
