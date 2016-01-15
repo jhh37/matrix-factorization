@@ -87,13 +87,13 @@ for i=1:N
       
       % If the specified algorithm does not exist, continue with the rest
       % of the for loop.
-      if ~isfield([lrmc_results.(dataset)], (alg_name)), continue
+      if ~isfield([lrmf_results.(dataset)], (alg_name)), continue
       end
       
       if opts.sample_end == 0,
-        alg = [lrmc_results.(dataset)(opts.sample_start:end).(alg_name)];
+        alg = [lrmf_results.(dataset)(opts.sample_start:end).(alg_name)];
       else
-        alg = [lrmc_results.(dataset)(opts.sample_start:opts.sample_end).(alg_name)];
+        alg = [lrmf_results.(dataset)(opts.sample_start:opts.sample_end).(alg_name)];
       end
       if (isnan(best_min)) || (best_min > min([alg.cost])), best_min = min([alg.cost]);
       end
@@ -141,11 +141,11 @@ for i=1:N
   
   % If the specified algorithm exists, do the calculations. Otherwise,
   % continue with the rest of the for loop.
-  if opts.(alg_name) && isfield([lrmc_results.(dataset)], (alg_name))
+  if opts.(alg_name) && isfield([lrmf_results.(dataset)], (alg_name))
     if opts.sample_end == 0
-      alg = [lrmc_results.(dataset)(opts.sample_start:end).(alg_name)];
+      alg = [lrmf_results.(dataset)(opts.sample_start:end).(alg_name)];
     else
-      alg = [lrmc_results.(dataset)(opts.sample_start:opts.sample_end).(alg_name)];
+      alg = [lrmf_results.(dataset)(opts.sample_start:opts.sample_end).(alg_name)];
     end
     alg_conv = [alg.cost] - best_min < opts.tol  *best_min;
     alg_all_iters = [alg.iters];

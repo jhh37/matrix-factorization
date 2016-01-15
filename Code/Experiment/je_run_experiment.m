@@ -32,12 +32,12 @@ else
 end
 
 % If a previous version of the file exists, load it.
-clearvars -global lrmc_results
+clearvars -global lrmf_results
 if exist([file, '.mat'], 'file') == 2, load(file);
 end
 
-% Set lrmc_results as a global variable.
-global lrmc_results
+% Set lrmf_results as a global variable.
+global lrmf_results
 
 %% LIST OF ALGORITHMS
 if ~opts.sample_end
@@ -75,12 +75,12 @@ algorithms = {
   'DRW2P_UWOFF' @(sample_num) je_wiberg(data.M, data.W, r, sample_num, nan, varargin{:}, 'nu=0.0', 'search_unique_weights=0')
   ...
   % Latest Ceres-solver LMs
-  'CE_LM' @(sample_num) je_ceres_lrmc_wrapper(data.M, data.W, r, sample_num, nan, varargin{:}, 'nu=0.0', 'max_als=0', 'write_binary_mw=0', ['sample_id=', sample_id], 'retraction=0');
-  'CE_LMI' @(sample_num) je_ceres_lrmc_wrapper(data.M, data.W, r, sample_num, nan, varargin{:}, 'nu=0.0', 'max_als=0', 'use_inner_iters=1', 'write_binary_mw=0', ['sample_id=', sample_id], 'retraction=0');
-  'CE_ALM' @(sample_num) je_ceres_lrmc_wrapper(data.M, data.W, r, sample_num, nan, varargin{:}, 'nu=0.0', sprintf('max_als=%d', opts.max_als), 'write_binary_mw=0', ['sample_id=', sample_id], 'retraction=0');
-  'CE_ALMI' @(sample_num) je_ceres_lrmc_wrapper(data.M, data.W, r, sample_num, nan, varargin{:}, 'nu=0.0', sprintf('max_als=%d', opts.max_als), 'use_inner_iters=1', 'write_binary_mw=0', ['sample_id=', sample_id], 'retraction=0');
-  'CE_ARULM' @(sample_num) je_ceres_lrmc_wrapper(data.M, data.W, r, sample_num, nan, varargin{:}, sprintf('nu=%d', opts.nu), sprintf('max_als=%d', opts.max_als), 'reg_unreg=1', 'write_binary_mw=0', ['sample_id=', sample_id], 'retraction=0');
-  'CE_ARULMI' @(sample_num) je_ceres_lrmc_wrapper(data.M, data.W, r, sample_num, nan, varargin{:}, sprintf('nu=%d', opts.nu), sprintf('max_als=%d', opts.max_als), 'reg_unreg=1', 'use_inner_iters=1', 'write_binary_mw=0', ['sample_id=', sample_id], 'retraction=0');
+  'CE_LM' @(sample_num) lrmf_ceres_wrapper(data.M, data.W, r, sample_num, nan, varargin{:}, 'nu=0.0', 'max_als=0', 'write_binary_mw=0', ['sample_id=', sample_id], 'retraction=0');
+  'CE_LMI' @(sample_num) lrmf_ceres_wrapper(data.M, data.W, r, sample_num, nan, varargin{:}, 'nu=0.0', 'max_als=0', 'use_inner_iters=1', 'write_binary_mw=0', ['sample_id=', sample_id], 'retraction=0');
+  'CE_ALM' @(sample_num) lrmf_ceres_wrapper(data.M, data.W, r, sample_num, nan, varargin{:}, 'nu=0.0', sprintf('max_als=%d', opts.max_als), 'write_binary_mw=0', ['sample_id=', sample_id], 'retraction=0');
+  'CE_ALMI' @(sample_num) lrmf_ceres_wrapper(data.M, data.W, r, sample_num, nan, varargin{:}, 'nu=0.0', sprintf('max_als=%d', opts.max_als), 'use_inner_iters=1', 'write_binary_mw=0', ['sample_id=', sample_id], 'retraction=0');
+  'CE_ARULM' @(sample_num) lrmf_ceres_wrapper(data.M, data.W, r, sample_num, nan, varargin{:}, sprintf('nu=%d', opts.nu), sprintf('max_als=%d', opts.max_als), 'reg_unreg=1', 'write_binary_mw=0', ['sample_id=', sample_id], 'retraction=0');
+  'CE_ARULMI' @(sample_num) lrmf_ceres_wrapper(data.M, data.W, r, sample_num, nan, varargin{:}, sprintf('nu=%d', opts.nu), sprintf('max_als=%d', opts.max_als), 'reg_unreg=1', 'use_inner_iters=1', 'write_binary_mw=0', ['sample_id=', sample_id], 'retraction=0');
   ...
   % External algorithms
   'PG_CSF' @(sample_num) je_external_wrapper(data.M, data.W, r, sample_num, varargin{:}, 'alg=PG_CSF');
@@ -102,17 +102,17 @@ algorithms = {
   };
 
 % Results now stored in struct array, so that e.g. time for LM_EU
-% are in lrmc_results.(dataset)(sample).LM_EU.time
+% are in lrmf_results.(dataset)(sample).LM_EU.time
 % To get an array of results from one algorithm, use
-% lm_eu = [lrmc_results.(dataset).LM_EU];
+% lm_eu = [lrmf_results.(dataset).LM_EU];
 % [lm_eu.runtime; lm_eu.cost; lm_eu.iters]'
 
 %% EXPERIMENT
 for sample_num = opts.sample_start : opts.sample_end
   
   fprintf('Experiments running on [%s - rank %d] sample [%d] \n', dataset, r, sample_num);
-  lrmc_results.(dataset)(sample_num).sample_num = sample_num;
-  lrmc_results.(dataset)(sample_num).rank = r;
+  lrmf_results.(dataset)(sample_num).sample_num = sample_num;
+  lrmf_results.(dataset)(sample_num).rank = r;
   
   for k = 1 : length(algorithms)
     
@@ -127,27 +127,27 @@ for sample_num = opts.sample_start : opts.sample_end
     if isfield(opts, (alg))
       if opts.(alg)
         if ~opts.overwrite && ...
-            isfield(lrmc_results.(dataset)(sample_num), alg) && ...
-            isfield(lrmc_results.(dataset)(sample_num).(alg), 'cost')
+            isfield(lrmf_results.(dataset)(sample_num), alg) && ...
+            isfield(lrmf_results.(dataset)(sample_num).(alg), 'cost')
           fprintf('Algorithm [%s] already run on [%s - rank %d] sample [%d]: %.6f\n', ...
-            alg, dataset, r, sample_num, lrmc_results.(dataset)(sample_num).(alg).cost);
+            alg, dataset, r, sample_num, lrmf_results.(dataset)(sample_num).(alg).cost);
         else
           fprintf('Algorithm [%s] running on [%s - rank %d] sample [%d]', alg, dataset, r, sample_num);
           time_start = tic;
           [U, V, err, iter] = alg_caller(sample_num);
           runtime = toc(time_start);
           
-          lrmc_results.(dataset)(sample_num).(alg).iters = iter;
-          lrmc_results.(dataset)(sample_num).(alg).cost = err;
-          lrmc_results.(dataset)(sample_num).(alg).runtime = runtime;
-          lrmc_results.(dataset)(sample_num).(alg).U = U;
-          lrmc_results.(dataset)(sample_num).(alg).V = V;
+          lrmf_results.(dataset)(sample_num).(alg).iters = iter;
+          lrmf_results.(dataset)(sample_num).(alg).cost = err;
+          lrmf_results.(dataset)(sample_num).(alg).runtime = runtime;
+          lrmf_results.(dataset)(sample_num).(alg).U = U;
+          lrmf_results.(dataset)(sample_num).(alg).V = V;
           
           fprintf(': %.6f, %03d iters, %.3f iters per sec\n', ...
-            lrmc_results.(dataset)(sample_num).(alg).cost, ...
-            lrmc_results.(dataset)(sample_num).(alg).iters, ...
-            lrmc_results.(dataset)(sample_num).(alg).iters / ...
-            lrmc_results.(dataset)(sample_num).(alg).runtime)
+            lrmf_results.(dataset)(sample_num).(alg).cost, ...
+            lrmf_results.(dataset)(sample_num).(alg).iters, ...
+            lrmf_results.(dataset)(sample_num).(alg).iters / ...
+            lrmf_results.(dataset)(sample_num).(alg).runtime)
           
           if ~exist('Results', 'dir'), mkdir('Results');
           end
@@ -155,7 +155,7 @@ for sample_num = opts.sample_start : opts.sample_end
           if ~exist(['Results/', dataset], 'dir'), mkdir(['Results/', dataset]);
           end
           
-          save(file, 'lrmc_results');
+          save(file, 'lrmf_results');
         end
       end
     end
@@ -167,6 +167,6 @@ if ~issparse(data.M)
   delete([filename, '_W.bin']);
 end
 
-clearvars -global lrmc_results
+clearvars -global lrmf_results
 
 end

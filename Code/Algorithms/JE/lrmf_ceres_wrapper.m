@@ -1,5 +1,5 @@
-function [U, V, cost, iter, store] = je_ceres_lrmc_wrapper(M, W, r, U, store, varargin)
-% JE_CERES_WRAPPER
+function [U, V, cost, iter, store] = lrmf_ceres_wrapper(M, W, r, U, store, varargin)
+% LRMF_CERES_WRAPPER
 %   The wrapper function for CERES-solver LMs
 
 % tic
@@ -86,7 +86,7 @@ je_write_binary_matrix([filename, '_V0.bin'], V);
 
 % If rank-1 initialization is set, then run first with rank-1 constraint.
 if opts.init_rank ~= 0
-  U_init = je_ceres_wrapper(M, W, opts.init_rank, U(:, 1:(opts.init_rank + opts.use_pca)), tol, max_iter, varargin{:}, 'init_rank=0');
+  U_init = lrmf_ceres_wrapper(M, W, opts.init_rank, U(:, 1:(opts.init_rank + opts.use_pca)), tol, max_iter, varargin{:}, 'init_rank=0');
   U(:, 1 : opts.init_rank) = U_init(:, 1 : opts.init_rank);
   
   % If using PCA, also copy the translational vector.
@@ -94,7 +94,7 @@ if opts.init_rank ~= 0
   end
 end
 
-statement = ['Algorithms/JE/je_ceres_lrmc ', ...
+statement = ['Algorithms/JE/lrmf_ceres_exec ', ...
   '--dataset=', opts.sample_id, ' ', ...
   '--folder=Temp ', ...
   '-m=', num2str(store.dim.m), ' ', ...
@@ -113,7 +113,7 @@ statement = ['Algorithms/JE/je_ceres_lrmc ', ...
 status = system(statement);
 
 % Throw an error if not run correctly.
-if status ~= 0, error('JE_CERES failed running');
+if status ~= 0, error('[ lrmf_ceres_exec ] failed running');
 end
 
 % Read U and V.
@@ -125,7 +125,7 @@ iter = iter + je_read_binary_matrix([filename, '_iters.bin'], 2, 1);
 % If using RU-mode, set current U and V to be the initial matrices for the
 % un-regularized problem (warm start).
 if opts.reg_unreg && (opts.nu > 0.0)
-  [U, V, cost, iter_unreg] = je_ceres_lrmc_wrapper(M, W, r, U, store, varargin{:}, ...
+  [U, V, cost, iter_unreg] = lrmf_ceres_wrapper(M, W, r, U, store, varargin{:}, ...
     'reg_unreg=0', 'max_als=0', 'nu=0.0', ['sample_id=', opts.sample_id], 'write_binary_mw=0');
   iter = iter + iter_unreg;
 else
