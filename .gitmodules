@@ -1,0 +1,12 @@
+[submodule "Code/Datasets"]
+	path = Code/Datasets
+	url = https://github.com/jhh37/lrmf-datasets
+[submodule "Code/Toolboxes/manopt"]
+	path = Code/Toolboxes/manopt
+	url = https://github.com/jhh37/manopt-unofficial
+[submodule "Code/Toolboxes/awful"]
+	path = Code/Toolboxes/awful
+	url = https://git01.codeplex.com/awful
+[submodule "Code/Algorithms/JE/lrmf_ceres"]
+	path = Code/Algorithms/JE/lrmf_ceres
+	url = https://github.com/jhh37/lrmf-ceres
