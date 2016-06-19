@@ -50,6 +50,15 @@ alg_names = {
   'CE_ALMI', 'Ceres'     % 10 ALS + CE_LM_I
   'CE_ARULM', 'Ceres'    % 10 reg. ALS + reg. CE_LM + unreg. CE_LM
   'CE_ARULMI', 'Ceres'   % 10 reg. ALS + reg. CE_LMI + unreg. CE_LMI
+  % New Ceres algorithms
+  'CE_L', 'Ceres'
+  'CE_EPI', 'Ceres'
+  'CE_LEPI', 'Ceres'
+  'CE_RW2', 'Ceres'
+  'CE_LRW2', 'Ceres'
+  'CE_LRW2_no_BQR', 'Ceres'
+  'CE_LRW2_ALS', 'Ceres'
+  'CE_LRW2_no_Init', 'Ceres'
   };
 
 % Make the first letter of the dataset name uppercase.
