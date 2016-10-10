@@ -44,7 +44,7 @@ if ~opts.sample_end
   opts.sample_end = opts.sample_start + opts.num_samples - 1;
 end
 
-data = load(['Datasets/' dataset '/' lower(dataset)]); % Load the measurement matrix.
+data = load(['../Datasets/' dataset '/' lower(dataset)]); % Load the measurement matrix.
 if ~issparse(data.M), data.M(data.W==0) = 100; % So we get an alert if some algo accesses zeros in M.
 end
 
@@ -64,15 +64,15 @@ algorithms = {
   % Latest custom-coded algorithms
   'ALS' @(sample_num) je_alternation(data.M, data.W, r, sample_num, nan, varargin{:}, 'retraction=0')
   'PF' @(sample_num) je_alternation(data.M, data.W, r, sample_num, nan, varargin{:}, 'retraction=1')
-  'DW' @(sample_num) je_wiberg(data.M, data.W, r, sample_num, nan, varargin{:}, 'nu=0.0', 'retraction=0')
-  'DRW1' @(sample_num) je_wiberg(data.M, data.W, r, sample_num, nan, varargin{:}, 'nu=0.0', 'alg_type=1', 'constraint=0')
-  'DRW1_UWOFF' @(sample_num) je_wiberg(data.M, data.W, r, sample_num, nan, varargin{:}, 'nu=0.0', 'alg_type=1', 'constraint=0', 'search_unique_weights=0')
-  'DRW1P' @(sample_num) je_wiberg(data.M, data.W, r, sample_num, nan, varargin{:}, 'nu=0.0', 'alg_type=1')
-  'DRW1P_UWOFF' @(sample_num) je_wiberg(data.M, data.W, r, sample_num, nan, varargin{:}, 'nu=0.0', 'alg_type=1', 'search_unique_weights=0')
-  'DRW2' @(sample_num) je_wiberg(data.M, data.W, r, sample_num, nan, varargin{:}, 'nu=0.0', 'constraint=0')
-  'DRW2_UWOFF' @(sample_num) je_wiberg(data.M, data.W, r, sample_num, nan, varargin{:}, 'nu=0.0', 'constraint=0', 'search_unique_weights=0')
-  'DRW2P' @(sample_num) je_wiberg(data.M, data.W, r, sample_num, nan, varargin{:}, 'nu=0.0')
-  'DRW2P_UWOFF' @(sample_num) je_wiberg(data.M, data.W, r, sample_num, nan, varargin{:}, 'nu=0.0', 'search_unique_weights=0')
+  'DW' @(sample_num) je_varpro(data.M, data.W, r, sample_num, nan, varargin{:}, 'nu=0.0', 'retraction=0')
+  'DRW1' @(sample_num) je_varpro(data.M, data.W, r, sample_num, nan, varargin{:}, 'nu=0.0', 'alg_type=1', 'constraint=0')
+  'DRW1_UWOFF' @(sample_num) je_varpro(data.M, data.W, r, sample_num, nan, varargin{:}, 'nu=0.0', 'alg_type=1', 'constraint=0', 'search_unique_weights=0')
+  'DRW1P' @(sample_num) je_varpro(data.M, data.W, r, sample_num, nan, varargin{:}, 'nu=0.0', 'alg_type=1')
+  'DRW1P_UWOFF' @(sample_num) je_varpro(data.M, data.W, r, sample_num, nan, varargin{:}, 'nu=0.0', 'alg_type=1', 'search_unique_weights=0')
+  'DRW2' @(sample_num) je_varpro(data.M, data.W, r, sample_num, nan, varargin{:}, 'nu=0.0', 'constraint=0')
+  'DRW2_UWOFF' @(sample_num) je_varpro(data.M, data.W, r, sample_num, nan, varargin{:}, 'nu=0.0', 'constraint=0', 'search_unique_weights=0')
+  'DRW2P' @(sample_num) je_varpro(data.M, data.W, r, sample_num, nan, varargin{:}, 'nu=0.0')
+  'DRW2P_UWOFF' @(sample_num) je_varpro(data.M, data.W, r, sample_num, nan, varargin{:}, 'nu=0.0', 'search_unique_weights=0')
   ...
   % Latest Ceres-solver LMs
   'CE_LM' @(sample_num) lrmf_ceres_wrapper(...
