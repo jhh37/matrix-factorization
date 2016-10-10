@@ -12,9 +12,9 @@ Thumbs.db
 *.mexw64
 
 # Results folder
-Code/Results
+Datasets
+Results
 Code/Temp
 
 # Ceres executable
-Code/Algorithms/JE/je_ceres_lrmc
 Code/Algorithms/JE/lrmf_ceres_exec
