@@ -12,7 +12,6 @@ Thumbs.db
 *.mexw64
 
 # Results folder
-Datasets
 Results
 Code/Temp
 
