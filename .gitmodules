@@ -1,6 +1,3 @@
-[submodule "Code/Datasets"]
-	path = Code/Datasets
-	url = https://github.com/jhh37/lrmf-datasets
 [submodule "Code/Toolboxes/manopt"]
 	path = Code/Toolboxes/manopt
 	url = https://github.com/jhh37/manopt-unofficial
