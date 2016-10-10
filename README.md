@@ -1,7 +1,7 @@
 # Secrets of Matrix Factorization (ICCV 2015)
 
 # Contributors
-- Je Hyeong Hong (jhh37@cam.ac.uk)
+- Je Hyeong Hong (jhh37@outlook.com)
 - Andrew Fitzgibbon (awf@microsoft.com)
 
 # Abstract
