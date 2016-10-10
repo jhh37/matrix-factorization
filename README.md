@@ -1,6 +1,10 @@
-# Secrets of Matrix Factorization
+# Secrets of Matrix Factorization (ICCV 2015)
 This is a repository for the matrix factorization
 project published in ICCV 2015.
+
+## Contributors
+- Je Hyeong Hong (jhh37@outlook.com)
+- Andrew Fitzgibbon (awf@microsoft.com)
 
 ## A how-to-pull guide
 Clone the repository using the following code
@@ -53,10 +57,6 @@ supported by [ LRMF-Ceres ].
 ## Video Spotlight
 Our 1-min video spotlight can be found at
 https://youtu.be/Kk0NIeNnc5M.
-
-## Contributors
-- Je Hyeong Hong (jhh37@outlook.com)
-- Andrew Fitzgibbon (awf@microsoft.com)
 
 ## Acknowledgment
 - The work was supported by Microsoft and Toshiba
