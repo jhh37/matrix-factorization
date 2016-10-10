@@ -10,3 +10,6 @@
 [submodule "Code/Algorithms/JE/lrmf_ceres"]
 	path = Code/Algorithms/JE/lrmf_ceres
 	url = https://github.com/jhh37/lrmf-ceres
+[submodule "Datasets"]
+	path = Datasets
+	url = https://github.com/jhh37/lrmf-datasets
