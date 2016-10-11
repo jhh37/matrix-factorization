@@ -34,7 +34,7 @@ Before starting, there are some issues you need to
 watch out for:
   
   1. Prior to running any experiment, you must
-have run [ Code/setup.m ], which adds relevat
+have run [ Code/setup.m ], which adds relevant
 paths and compile required mex files.
   2. All commands must run in the [ Code ]
 directory.
