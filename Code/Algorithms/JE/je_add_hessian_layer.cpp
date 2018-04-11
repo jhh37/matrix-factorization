@@ -1,4 +1,5 @@
 #include "mex.h"
+#include <stdint.h>
 
 /* JE_ADD_HESSIAN_LAYER
  * Adds a layer of triangular components of the Hessian matrix.
@@ -14,7 +15,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]) {
   double    *mat_out, *mat_in1, *mat_in2;
   double    A_ij;
   mwSize    mr, p_j, r, mrr, hidx[3], kidx;
-  mwSize    *rng;
+  uint32_t *rng;
   
   if (nlhs > 0) {
     mexErrMsgTxt("This function does not create any output.");
@@ -28,7 +29,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]) {
   mat_out = mxGetPr(prhs[0]);
   mat_in1 = mxGetPr(prhs[1]);
   mat_in2 = mxGetPr(prhs[2]);
-  rng = (mwSize*) mxGetData(prhs[3]);
+  rng = (unsigned int*) mxGetData(prhs[3]);
   
   // Get rank and nnz.
   mr = mxGetM(prhs[0]);

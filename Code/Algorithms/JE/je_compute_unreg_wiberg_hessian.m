@@ -35,12 +35,12 @@ if opts.alg_type < 3
   if opts.use_indicator_weight
     for j = 1 : store.wc.unique.count
       B_j = B(store.wc.unique.ac{j}, :);
-      je_add_hessian_layer(hess, AtQ{j} * AtQ{j}', - (B_j' * B_j), int32(store.wc.unique.nz{j} - 1));
+      je_add_hessian_layer(hess, AtQ{j} * AtQ{j}', - (B_j' * B_j), uint32(store.wc.unique.nz{j} - 1));
     end
   else
     for j = 1 : store.wc.unique.count
       B_j = bsxfun(@times, store.wc.unique.wnz{j}, B_j);
-      je_add_hessian_layer(hess, AtQ{j} * AtQ{j}', - (B_j' * B_j), int32(store.wc.unique.nz{j} - 1));
+      je_add_hessian_layer(hess, AtQ{j} * AtQ{j}', - (B_j' * B_j), uint32(store.wc.unique.nz{j} - 1));
     end
   end
   % toc
@@ -53,13 +53,13 @@ if opts.alg_type < 3
       for j = 1 : store.wc.unique.count
         R_j = R(store.wc.unique.nz{j}, store.wc.unique.ac{j});
         AtRinv_j = eye(r) / AtR{j};
-        je_add_hessian_layer(hess, R_j * R_j', AtRinv_j * AtRinv_j', int32(store.wc.unique.nz{j} - 1));
+        je_add_hessian_layer(hess, R_j * R_j', AtRinv_j * AtRinv_j', uint32(store.wc.unique.nz{j} - 1));
       end
     else
       for j = 1 : store.wc.unique.count
         R_j = bsxfun(@times, store.wc.unique.wnz{j}, R_j);
         AtRinv_j = eye(r) / AtR{j};
-        je_add_hessian_layer(hess, R_j * R_j', AtRinv_j * AtRinv_j', int32(store.wc.unique.nz{j} - 1));
+        je_add_hessian_layer(hess, R_j * R_j', AtRinv_j * AtRinv_j', uint32(store.wc.unique.nz{j} - 1));
       end
     end
   end
