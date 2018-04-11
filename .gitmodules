@@ -3,7 +3,7 @@
 	url = https://github.com/jhh37/manopt-unofficial
 [submodule "Code/Toolboxes/awful"]
 	path = Code/Toolboxes/awful
-	url = https://git01.codeplex.com/awful
+	url = https://github.com/awf/awful
 [submodule "Code/Algorithms/JE/lrmf_ceres"]
 	path = Code/Algorithms/JE/lrmf_ceres
 	url = https://github.com/jhh37/lrmf-ceres
